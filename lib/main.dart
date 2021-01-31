@@ -1,21 +1,35 @@
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
+import 'package:bonfire/bonfire.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyGame().widget);
+import 'game.dart';
+import 'sprite_sheet_orc.dart';
+import 'sprite_sheet_player.dart';
 
-class MyGame extends BaseGame {
-  @override
-  void render(Canvas canvas) {
-    String text = "Score: 0";
-    TextPainter textPainter =
-        Flame.util.text(text, color: Colors.white, fontSize: 48.0);
-    textPainter.paint(canvas, Offset(size.width / 5, size.height / 2));
-    super.render(canvas);
+double tileSize = 20.0;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb) {
+    await Flame.util.fullScreen();
+    await Flame.util.setLandscape();
   }
+  await SpriteSheetPlayer.load();
+  await SpriteSheetOrc.load();
+  runApp(MyApp());
+}
 
+class MyApp extends StatelessWidget {
   @override
-  void update(double t) {
-    super.update(t);
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'TINGUE',
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: Game(),
+    );
   }
 }
